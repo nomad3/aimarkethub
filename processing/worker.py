@@ -1,12 +1,12 @@
 import os
 from celery import Celery
 from redis import Redis
-from .analyzer import PaperAnalyzer
-from database import get_db  # Conexión a PostgreSQL
+from analyzer import PaperAnalyzer
+from api.database import get_db  # Acceso cruzado entre servicios
 
-app = Celery('tasks', broker='redis://localhost:6379/0')
+app = Celery('tasks', broker='redis://redis:6379/0')
 analyzer = PaperAnalyzer()
-redis_conn = Redis(host='localhost', port=6379)
+redis_conn = Redis(host='redis', port=6379)
 
 @app.task(bind=True, max_retries=3)
 def process_paper_task(self, paper_id):

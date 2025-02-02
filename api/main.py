@@ -1,13 +1,14 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException
 from fastapi_limiter.depends import RateLimiter
 from database import get_db
-import processing.worker as worker
 from fastapi.middleware.cors import CORSMiddleware
+from auth import get_current_user
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -44,7 +45,7 @@ async def list_papers(
 async def get_paper_details(
     paper_id: int,
     db=Depends(get_db),
-    user: dict = Depends(get_current_user)
+    # user: dict = Depends(get_current_user)
 ):
     """Endpoint enriquecido con más metadata"""
     paper = db.execute("""

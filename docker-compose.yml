@@ -36,7 +36,9 @@ services:
       - aimarket-net
 
   worker:
-    build: ./processing
+    build:
+      context: .
+      dockerfile: processing/Dockerfile
     environment:
       DATABASE_URL: postgresql://admin:secret@postgres:5432/aimarkethub
       REDIS_URL: redis://redis:6379/0
@@ -50,9 +52,9 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     environment:
-      VITE_API_URL: http://backend:8000
+      VITE_API_URL: http://localhost:8000
     depends_on:
       - backend
     networks:
